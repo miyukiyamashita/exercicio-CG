@@ -9,6 +9,7 @@ import {
     onWindowResize,
     createGroundPlaneXZ
 } from "../libs/util/util.js";
+import { SphereGeometry } from '../build/three.module.js';
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
@@ -29,35 +30,41 @@ scene.add(axesHelper);
 let plane = createGroundPlaneXZ(20, 20)
 scene.add(plane);
 
-// create a cube
-let cubeGeometry = new THREE.BoxGeometry(11, 0.3, 6);
-let cube = new THREE.Mesh(cubeGeometry, material);
+// create a sphere
+let esfera5 = new THREE.SphereGeometry(0.5, 15.0, 25.0);
+let esferalets = new THREE.Mesh(esfera5, material);
 // position the cube
-cube.position.set(0.0, 3.0, 0.0);
+esferalets.position.set(0.0, 2.0, 2.0);
 // add the cube to the scene
-scene.add(cube);
+// scene.add(cube);
+
+let i;
+for (i = 1; i < 13; i++) {
+
+    let raio = 6;
+    let angulo = (i / 12) * Math.PI * 2;
+    let angle1 = 0;
+    
+    let esfera5 = new THREE.SphereGeometry(0.5, 10, 15);
+    let esferalets = new THREE.Mesh(esfera5, material);
+
+    //esferalets.rotateX(Math.cos(angulo)*raio);
+    //esferalets.rotateY(angle1);
+    //esferalets.rotateZ(Math.sin(angulo)*raio);
+
+    esferalets.translateX(Math.cos(angulo)*raio);
+    esferalets.translateY(1);
+    esferalets.translateZ(Math.sin(angulo)*raio);
 
 
-for (let i = 0; i < 4; i++) {
+    scene.add(esferalets);
 
-    let position1 = [{ 'x': 5.0, 'y': -1.5, 'z': 2.0 }, { 'x': 5.0, 'y': -1.5, 'z': -2.0 }, { 'x': -5.0, 'y': -1.5, 'z': 2.0 }, { 'x': -5.0, 'y': -1.5, 'z': -2.0 }];
 
-    let cylinder = new THREE.CylinderGeometry(0.2, 0.2, 3, 30);
-    let material2 = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-    let cylinder1 = new THREE.Mesh(cylinder, material2);
-
-    cube.add(cylinder1);
-
-    cylinder1.translateX(position1[i].x);
-    cylinder1.translateY(position1[i].y);
-    cylinder1.translateZ(position1[i].z);
 }
-
-
 
 // Use this to show information onscreen
 let controls = new InfoBox();
-controls.add("Basic Scene");
+controls.add("Exercício 5");
 controls.addParagraph();
 controls.add("Use mouse to interact:");
 controls.add("* Left button to rotate");
