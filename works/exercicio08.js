@@ -25,40 +25,18 @@ createTeapot(0.0, 0.4, 2.0, Math.random() * 0xffffff);
 createTeapot(0.0, 0.4, -2.0, Math.random() * 0xffffff);
 
 let camPos = new THREE.Vector3(3, 4, 8);
-let camUp = new THREE.Vector3(0.0, 1.0, 0.0);
-let camLook = new THREE.Vector3(0.0, 0.0, 0.0);
+let camUp = new THREE.Vector3(0.0, 0.5, 0.0);
+let camLook = new THREE.Vector3(0.0, 0.5, -1.0);
 var message = new SecondaryBox("");
 
 // Main camera
 camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.copy(-30, 40, 30);
-camera.up.copy(0, 1, 0);
-camera.lookAt(0, 0, 0);
-
-const cameraHelper = new THREE.CameraHelper(camera);
-scene.add(cameraHelper);
-
+camera.position.copy(camPos);
+camera.up.copy(camUp);
+camera.lookAt(camLook);
 
 updateCamera();
 render();
-
-// function createCameraObject() {
-
-//     let matBody = new THREE.MeshPhongMaterial({ color: "rgb(255, 0, 0)" });
-//     let matLens = new THREE.MeshPhongMaterial({ color: "rgb(255, 255, 0)" });
-
-//     let cBody = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-//     let body = new THREE.Mesh(cBody, matBody);
-
-//     let cLens = new THREE.ConeGeometry(0.1, 0.2, 20);
-//     let lens = new THREE.Mesh(cLens, matLens);
-//     lens.rotateX(THREE.MathUtils.degToRad(90));
-//     lens.position.set(0.0, 0.0, -0.1);
-//     body.add(lens);
-
-//     scene.add(body);
-//     return body;
-// }
 
 function updateCamera() {
     // DICA: Atualize a câmera aqui!
@@ -70,6 +48,7 @@ function updateCamera() {
     message.changeMessage("Pos: {" + camPos.x + ", " + camPos.y + ", " + camPos.z + "} " +
         "/ LookAt: {" + camLook.x + ", " + camLook.y + ", " + camLook.z + "}");
 }
+
 let cameraHolder = new THREE.Object3D();
 cameraHolder.add(camera);
 scene.add(cameraHolder);
