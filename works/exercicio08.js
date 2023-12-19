@@ -76,10 +76,7 @@ function keyboardUpdate() {
         cameraHolder.rotateZ(-1);
     if (keyboard.down("E"))
         cameraHolder.rotateZ(+1);
-    if (keyboard.down("pageup"))
-        cameraHolder.translateY(-1);
-    if (keyboard.down("pagedown"))
-        cameraHolder.translateY(+1);
+    
     // DICA: Insira aqui seu código para mover a câmera
 
     updateCamera();
