@@ -8,7 +8,7 @@ import {
   createGroundPlane,
   onWindowResize,
   createLightSphere,
-} from '/three/threejs/libs/util/util.js';
+} from '../libs/util/util.js';
 
 let scene, renderer, camera, orbit, keyboard; // Initial variables
 scene = new THREE.Scene();    // Create main scene
