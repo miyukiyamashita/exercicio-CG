@@ -31,19 +31,19 @@ scene.add(axesHelper);
 let plane = createGroundPlaneXZ(30, 30)
 scene.add(plane);
 
-// create 3 cubes with different sizes
 
-let sphereGeometry = new THREE.SphereGeometry(1);
-let sphere = new THREE.Mesh(sphereGeometry, material);
-let sphere2 = new THREE.Mesh(sphereGeometry, material);
-sphere.position.set(-10, 1, -5);
-sphere2.position.set(-10, 1, 5);
+let sphereGeometry = new THREE.SphereGeometry(2, 20, 45);
+let material3 = new THREE.MeshBasicMaterial({ color: 0x9400d3 });
+let sphere = new THREE.Mesh(sphereGeometry, material3);
+let sphere2 = new THREE.Mesh(sphereGeometry, material3);
+sphere.position.set(-5, 2.5, -5);
+sphere2.position.set(-5, 2.5, 5);
 
 scene.add(sphere);
 scene.add(sphere2);
 
-let initialPositionSphere = new THREE.Vector3(-10, 1, -5);
-let initialPositionSphere2 = new THREE.Vector3(-10, 1, 5);
+let initialPositionSphere = new THREE.Vector3(-5, 2.5, -5);
+let initialPositionSphere2 = new THREE.Vector3(-5, 2.5, 5);
 
 let targetPositionSphere = initialPositionSphere.clone();
 let targetPositionSphere2 = initialPositionSphere2.clone();
@@ -52,11 +52,11 @@ let isAnimating = false;
 
 
 document.getElementById('btnSphere1').addEventListener('click', () => {
-  targetPositionSphere = new THREE.Vector3(10, 1, -5);
+  targetPositionSphere = new THREE.Vector3(5, 2.5, -5);
   isAnimating = true;
 })
 document.getElementById('btnSphere2').addEventListener('click', () => {
-  targetPositionSphere2 = new THREE.Vector3(10, 1, 5);
+  targetPositionSphere2 = new THREE.Vector3(5, 2.5, 5);
   isAnimating = true;
 })
 document.getElementById('btnReset').addEventListener('click', () => {

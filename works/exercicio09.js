@@ -45,8 +45,8 @@ sphere2.position.set(-5.0, 2.5, 6.0);
 scene.add(sphere2);
 
 const lerpConfig = {
-    destination: new THREE.Vector3(10.0, 2.0, -5.0),
-    destination2: new THREE.Vector3(10.0, 2.0, 5.0),
+    destination: new THREE.Vector3(5, 2.5, -6),
+    destination2: new THREE.Vector3(5, 2.5, 6),
     alpha: 0.05,
     alpha2: 0.02,
     move: false,
