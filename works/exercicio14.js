@@ -77,7 +77,7 @@ function loadPLYFile(modelPath, modelName, visibility, desiredScale)
   loader.load( modelPath + modelName + '.ply', function ( geometry ) {
       geometry.computeVertexNormals();
 
-      var material = new THREE.MeshPhongMaterial({color:"rgb(255,120,50)"});
+      var material = new THREE.MeshPhongMaterial({color:"rgb(0,80,24)"});
       var obj = new THREE.Mesh( geometry, material );
 
       obj.name = modelName;
