@@ -1,5 +1,6 @@
 # Blender v2.82 (sub 7) OBJ File: 'tank.model.combined.blend'
 # www.blender.org
+
 mtllib toon_tank.mtl
 o Tank_Wheel_1_Cube.010
 v -1.231975 0.334403 1.288326
