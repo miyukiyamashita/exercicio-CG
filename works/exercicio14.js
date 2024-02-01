@@ -44,7 +44,7 @@ scene.add( axesHelper );
 // Assets manager --------------------------------
 let assetManager = {
    // Properties ---------------------------------
-   toonTank: null,
+   toontank: null,
 
    allLoaded: false, 
 
@@ -52,7 +52,7 @@ let assetManager = {
    checkLoaded : function() {
       if(!this.allLoaded)
       {
-         if(this.toonTank){
+         if(this.toontank){
              this.allLoaded = true;
              loadingMessage.hide(); 
          }
@@ -60,14 +60,13 @@ let assetManager = {
    },   
 
    hideAll : function() {
-      this.toonTank.visible = false;
+      this.toontank.visible = false;
     
    }
 }
 
-loadOBJFile('../assets/', 'toonTank', true, 1.5);
-loadGLBFile('../assets/', 'toonTank', false, 2.5);
-// loadPLYFile('../assets/', 'toonTank', false, 2.0);
+loadOBJFile('../assets/objects/', 'toontank', true, 1.5);
+
 
 buildInterface();
 render();
@@ -170,7 +169,7 @@ function buildInterface()
   var controls = new function ()
   {
     this.viewAxes = false;
-    this.type = "toonTank";
+    this.type = "toontank";
     this.onChooseObject = function()
     {
       assetManager.hideAll();
@@ -183,6 +182,10 @@ function buildInterface()
 
   // GUI interface
   var gui = new GUI();
+  gui.add(controls, 'type',
+    ['toontank'])
+    .name("Change Object")
+    .onChange(function(e) { controls.onChooseObject(); });
   gui.add(controls, 'viewAxes', false)
     .name("View Axes")
     .onChange(function(e) { controls.onViewAxes() });    
