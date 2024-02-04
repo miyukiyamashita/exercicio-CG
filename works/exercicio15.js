@@ -87,15 +87,15 @@ function buildObjects()
    
    // Base objects
   // let sphereMesh = new THREE.Mesh( new THREE.SphereGeometry(1.45, 20, 20) )
-   let cylinderMesh = new THREE.Mesh( new THREE.CylinderGeometry(0.9, 0.9, 2, 20))
-   let cylinder2Mesh = new THREE.Mesh( new THREE.CylinderGeometry(0.5, 0.5, 2, 20))
+   let cylinderMesh = new THREE.Mesh( new THREE.CylinderGeometry(1, 1, 6, 20))
+   let cylinder2Mesh = new THREE.Mesh( new THREE.CylinderGeometry(1, 0, 5.8, 20))
    let torusMesh = new THREE.Mesh( new THREE.TorusGeometry(0.4, 0.1, 20, 20))   
 
    // CSG holders
    let csgObject, cylinder2CSG, cylinderCSG, torusCSG
 
    // Object 1 - Cylinder SUBTRACT Cylinder2
-   cylinder2Mesh.position.set(0.9, 0.001, 0.5)
+   cylinder2Mesh.position.set(0.1, 0.1, 0.1)
    updateObject(cylinder2Mesh) // update internal coords
    cylinder2CSG = CSG.fromMesh(cylinder2Mesh)  
    cylinderCSG = CSG.fromMesh(cylinderMesh)   
