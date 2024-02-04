@@ -86,44 +86,44 @@ function buildObjects()
    let auxMat = new THREE.Matrix4();
    
    // Base objects
-   let cubeMesh = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2))
-   let sphereMesh = new THREE.Mesh( new THREE.SphereGeometry(1.45, 20, 20) )
-   let cylinderMesh = new THREE.Mesh( new THREE.CylinderGeometry(0.85, 0.85, 2, 20))
-   let torusMesh = new THREE.Mesh( new THREE.TorusGeometry(0.8, 0.2, 20, 20))   
+  // let sphereMesh = new THREE.Mesh( new THREE.SphereGeometry(1.45, 20, 20) )
+   let cylinderMesh = new THREE.Mesh( new THREE.CylinderGeometry(0.9, 0.9, 2, 20))
+   let cylinder2Mesh = new THREE.Mesh( new THREE.CylinderGeometry(0.5, 0.5, 2, 20))
+   let torusMesh = new THREE.Mesh( new THREE.TorusGeometry(0.4, 0.1, 20, 20))   
 
    // CSG holders
-   let csgObject, cubeCSG, sphereCSG, cylinderCSG, torusCSG
+   let csgObject, cylinder2CSG, cylinderCSG, torusCSG
 
-   // Object 1 - Cube SUBTRACT Sphere
-   sphereMesh.position.set(1, -0.5, 0.5)
-   updateObject(sphereMesh) // update internal coords
-   sphereCSG = CSG.fromMesh(sphereMesh)  
-   cubeCSG = CSG.fromMesh(cubeMesh)   
-   csgObject = cubeCSG.subtract(sphereCSG) // Execute subtraction
+   // Object 1 - Cylinder SUBTRACT Cylinder2
+   cylinder2Mesh.position.set(0.9, 0.001, 0.5)
+   updateObject(cylinder2Mesh) // update internal coords
+   cylinder2CSG = CSG.fromMesh(cylinder2Mesh)  
+   cylinderCSG = CSG.fromMesh(cylinderMesh)   
+   csgObject = cylinderCSG.subtract(cylinder2CSG) // Execute subtraction
    mesh1 = CSG.toMesh(csgObject, auxMat)
    mesh1.material = new THREE.MeshPhongMaterial({color: 'lightgreen'})
    mesh1.position.set(0, 0, 1.02)
    scene.add(mesh1)
 
    // Object 2 - Cube INTERSECT Cylinder
-   cylinderMesh.position.set(1, -0.5, 0.0)
-   updateObject(cylinderMesh)
-   cylinderCSG = CSG.fromMesh(cylinderMesh)
-   cubeCSG = CSG.fromMesh(cubeMesh)   
-   csgObject = cubeCSG.intersect(cylinderCSG) // Execute intersection
-   mesh2 = CSG.toMesh(csgObject, auxMat)
-   mesh2.material = new THREE.MeshPhongMaterial({color: 'lightblue'})
-   mesh2.position.set(3, 0, 0.9)
-   scene.add(mesh2)
+  // cylinderMesh.position.set(1, -0.5, 0.0)
+   //updateObject(cylinderMesh)
+   //cylinderCSG = CSG.fromMesh(cylinderMesh)
+   //cubeCSG = CSG.fromMesh(cubeMesh)   
+   //csgObject = cubeCSG.intersect(cylinderCSG) // Execute intersection
+   //mesh2 = CSG.toMesh(csgObject, auxMat)
+   //mesh2.material = new THREE.MeshPhongMaterial({color: 'lightblue'})
+   //mesh2.position.set(3, 0, 0.9)
+   //scene.add(mesh2)
 
-   // Object 3 - Cube UNION torus
+   // Object 3 - Cylinder UNION torus
    torusMesh.rotateX(THREE.MathUtils.degToRad(90))
-   torusMesh.position.set(0.0, 0.0, 1.0) // reset position
+   torusMesh.position.set(1, 0, 1.0) // reset position
    updateObject(torusMesh) 
    torusCSG = CSG.fromMesh(torusMesh)
-   cubeCSG = CSG.fromMesh(cubeMesh)
+   cylinderCSG = CSG.fromMesh(cylinderMesh)
 
-   csgObject = cubeCSG.union(torusCSG) // Execute union
+   csgObject = cylinderCSG.union(torusCSG) // Execute union
    mesh3 = CSG.toMesh(csgObject, auxMat)
    mesh3.material = new THREE.MeshPhongMaterial({color: 'indianred'})
    mesh3.position.set(-4, 0, 1.02)
