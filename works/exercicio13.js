@@ -1,192 +1,73 @@
 import * as THREE from  'three';
-import Stats from '../build/jsm/libs/stats.module.js';
-import GUI from '../libs/util/dat.gui.module.js'
-import {TrackballControls} from '../build/jsm/controls/TrackballControls.js';
-import {ConvexGeometry} from '../build/jsm/geometries/ConvexGeometry.js';
+import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
 import {initRenderer, 
-        initDefaultBasicLight,
-        createGroundPlane,
-        onWindowResize, 
-        lightFollowingCamera} from "../libs/util/util.js";
+        initCamera,
+        initDefaultSpotlight,
+        setDefaultMaterial,
+        onWindowResize,
+        createGroundPlaneXZ} from "../libs/util/util.js";
 
-var scene = new THREE.Scene();    // Create main scene
-var stats = new Stats();          // To show FPS information        
-var clock = new THREE.Clock();
-var light = initDefaultBasicLight(scene, true, new THREE.Vector3(3, 3, 1)); 
-var renderer = initRenderer();    // View function in util/utils
-  renderer.setClearColor("rgb(30, 30, 30)");
-var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.lookAt(0, 0, 0);
-  camera.position.set(5,15,40);
-  camera.up.set( 0, 1, 0 );
+let scene, renderer, camera, material, light, orbit;; // Initial variables
+scene = new THREE.Scene();    // Create main scene
+renderer = initRenderer();    // Init a basic renderer
+renderer.setClearColor("rgb(30, 30, 40)");
+camera = initCamera(new THREE.Vector3(0, 20, 30)); // Init camera in this position
+material = setDefaultMaterial(); // create a basic material
+material.color.setHex( 0x61b645 ); // set material color
+light = initDefaultSpotlight(scene, new THREE.Vector3(25, 30, 20));
+orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
 
-var followCamera = false; // Controls if light will follow camera
-
-// Enable mouse rotation, pan, zoom etc.
-var trackballControls = new TrackballControls( camera, renderer.domElement );
+let ambientLight = new THREE.AmbientLight();
+scene.add(ambientLight);
+ambientLight.intensity = 0.08;
 
 // Listen window size changes
 window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
 
-var groundPlane = createGroundPlane(40, 35); // width and height
-  groundPlane.rotateX(THREE.MathUtils.degToRad(-90));
-scene.add(groundPlane);
-
 // Show axes (parameter is size of each axis)
-var axesHelper = new THREE.AxesHelper( 20 );
-  axesHelper.visible = false;
-  axesHelper.translateY(0.1);
+let axesHelper = new THREE.AxesHelper(15);
 scene.add( axesHelper );
 
-var objColor = "rgb(255, 0, 0)";
-var objOpacity = 0.5;
+// create the ground plane
+let plane = createGroundPlaneXZ(30, 30)
+scene.add(plane);
 
-// Object Material
-var objectMaterial = new THREE.MeshPhongMaterial({
-  color: objColor,
-  opacity: objOpacity,
-  transparent: true});
+const vertCube = [
+  -3,   -1,   -1,
+   1,   -1,   -1,
+   1,    1,   -1,
+  -1,    1,   -1,
+  -3,   -1,    1,
+   1,   -1,    1,
+   1,    1,    1,
+  -1,    1,    1,
+];
 
-//----------------------------------
-// Create Convex Geometry
-//----------------------------------
-var numPoints = 30;
+const indicesFaces = [
+  2, 1, 0, 0, 3, 2,
+  0, 4, 7, 7, 3, 0,
+  0, 1, 5, 5, 4, 0,
+  1, 2, 6, 6, 5, 1,
+  2, 3, 7, 7, 6, 2,
+  4, 5, 6, 6, 7, 4
+];
 
-var sphereGeom = new THREE.SphereGeometry(0.2); // Sphere to represent points
-var sphereMaterial = new THREE.MeshPhongMaterial({color:"rgb(255,255,0)"});
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertCube, 3));
+geometry.setIndex(indicesFaces);
 
-// Global variables to be removed from memory each interaction
-var pointCloud = null;
-//  var spGroup = null;
-var points = null;
-var objectSize = 10;
-var convexGeometry = null;
-var object = null;
-var pointCloudVisibility = true;
-var objectVisibility = true;
-var castShadow = true;
+material = new THREE.MeshBasicMaterial({ color: "#6345b6" });
+let cube = new THREE.Mesh(geometry, material);
+cube.castShadow = true;
 
-buildInterface();
+cube.position.set(0.0, 1.0, 0.0);
+
+scene.add(cube);
+
+
 render();
-
-function generatePoints(numberOfPoints)
-{
-  var points = 8;
-  var maxSize = objectSize;
-  for (var i = 0; i < numberOfPoints; i++) {
-    var randomX = Math.round(-maxSize + Math.random() * maxSize*2);
-    var randomY = Math.round(0.1 + Math.random() * maxSize); //
-    var randomZ = Math.round(-maxSize + Math.random() * maxSize*2);
-    points.push(new THREE.Vector3(randomX, randomY, randomZ));
-  }
-
-  var material = new THREE.MeshPhongMaterial({color:"rgb(255,255,0)"});
-
-  pointCloud = new THREE.Object3D();
-  points.forEach(function (point) {
-    var spGeom = new THREE.SphereGeometry(0.2);
-    var spMesh = new THREE.Mesh(spGeom, material);
-    spMesh.position.set(point.x, point.y, point.z);
-    pointCloud.add(spMesh);
-  });
-
-  scene.add(pointCloud);
-
-  return points;
-}
-
-var localPoints = generatePoints(numPoints);
-convexGeometry = new ConvexGeometry(localPoints);
-
-object = new THREE.Mesh(convexGeometry, objectMaterial);
-object.castShadow = castShadow;
-object.visible = objectVisibility;
-scene.add(object);
-
-function buildInterface()
-{
-  var controls = new function ()
-  {
-    this.viewObject = true;
-    this.viewAxes = false;
-    this.viewPoints = true;
-    this.lightFollowCamera = false;
-    this.color = objColor;
-    this.opacity = objOpacity;
-    this.numPoints = numPoints;
-    this.objectSize = objectSize;
-    this.castShadow = castShadow
-
-    this.onViewObject = function(){
-      object.visible = this.viewObject;
-      objectVisibility = this.viewObject;
-    };
-    this.onViewPoints = function(){
-      pointCloud.visible = this.viewPoints;
-      pointCloudVisibility = this.viewPoints;
-    };
-    this.onViewAxes = function(){
-      axesHelper.visible = this.viewAxes;
-    };
-    this.updateColor = function(){
-      objectMaterial.color.set(this.color);
-    };
-    this.updateOpacity = function(){
-      objectMaterial.opacity = this.opacity;
-    };
-    this.updateLight = function(){
-      followCamera = this.lightFollowCamera;
-    };
-    this.onCastShadow = function(){
-      object.castShadow = this.castShadow;
-      pointCloud.castShadow = this.castShadow;
-      castShadow = this.castShadow;
-    };
-    this.rebuildGeometry = function(){
-      numPoints = this.numPoints;
-      objectSize = this.objectSize;
-      updateConvexObject();
-    };
-  };
-
-  var gui = new GUI();
-  gui.add(controls, 'viewObject', true)
-    .name("View Object")
-    .onChange(function(e) { controls.onViewObject() });
-  gui.add(controls, 'viewPoints', false)
-    .name("View Points")
-    .onChange(function(e) { controls.onViewPoints() });
-  gui.add(controls, 'viewAxes', false)
-    .name("View Axes")
-    .onChange(function(e) { controls.onViewAxes() });
-  gui.add(controls, 'lightFollowCamera', false)
-    .name("LightFollowCam")
-    .onChange(function(e) { controls.updateLight() });
-  gui.add(controls, 'castShadow', castShadow)
-    .name("Shadows")
-    .onChange(function(e) { controls.onCastShadow() });
-  gui.addColor(controls, 'color')
-    .name("Object Color")
-    .onChange(function(e) { controls.updateColor();});
-  gui.add(controls, 'opacity', 0, 1)
-    .name("Opacity")
-    .onChange(function(e) { controls.updateOpacity();});
-  gui.add(controls, 'objectSize', 2, 20)
-    .name("Object Max Size")
-    .onChange(function(e) { controls.rebuildGeometry();});
-  gui.add(controls, 'numPoints', 10, 50)
-    .name("Number Of Points")
-    .onChange(function(e) { controls.rebuildGeometry();});
-}
-
 function render()
 {
-  stats.update();
-  trackballControls.update();
-  if(followCamera)
-      lightFollowingCamera(light, camera) // Makes light follow the camera
-  else
-      light.position.set(5,15,40);
   requestAnimationFrame(render);
-  renderer.render(scene, camera)
+  renderer.render(scene, camera) // Render scene
 }
