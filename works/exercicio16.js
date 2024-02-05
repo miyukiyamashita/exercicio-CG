@@ -26,20 +26,19 @@ scene.add( axesHelper );
 
 // Create the cube
 let loader = new THREE.TextureLoader();
-let geometry = new THREE.BoxGeometry(10, 5, 5);
-let cubeMaterials = [
-    setMaterial('../assets/textures/crate.jpg', 2, 2), //x+
-    setMaterial('../assets/textures/paper.png', 1, 1, 'orange'), //x-   Texture + color
-    setMaterial('../assets/textures/grass.jpg', 2, 1), //y+
-    new THREE.MeshBasicMaterial ({color:'rgb(0,200,100)'}), //y-  Just a color
-    setMaterial('../assets/textures/stone.jpg', 2, 1), //z+
-    setMaterial('../assets/textures/marble.png', 2, 1) //z-
+let geometry = new THREE.CylinderGeometry(2, 2, 10, 30);
+let cylinderMaterials = [
+    setMaterial('../assets/textures/wood.png', 2, 2), //corpo
+    setMaterial('../assets/textures/woodtop.png', 1, 1), //calota inferior   Texture + color
+    setMaterial('../assets/textures/woodtop.png', 1, 1), //calota superior
+    
+
 ];
-let cube = new THREE.Mesh(geometry, cubeMaterials);
-scene.add(cube);
+let cilindro = new THREE.Mesh(geometry, cylinderMaterials);
+scene.add(cilindro);
 
 // To access textures individually, you should use their indexes
-console.log(cube.material[0].map)
+console.log(cilindro.material[0].map)
 
 render();
 
